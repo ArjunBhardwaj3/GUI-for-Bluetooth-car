@@ -1,0 +1,77 @@
+String t;
+
+int duration;
+void setup() {
+pinMode(9,OUTPUT);   //left motors forward
+pinMode(10,OUTPUT);   //left motors reverse
+pinMode(11,OUTPUT);   //right motors forward
+pinMode(12,OUTPUT);   //right motors reverse
+pinMode(13,OUTPUT);   //right motors reverse
+ 
+Serial.begin(9600);
+ 
+}
+ 
+void loop() {
+if(Serial.available()){
+  t="";
+  t = Serial.readStringUntil(" ");
+ t.trim();
+
+}
+
+
+int lastSpaceIndex = t.lastIndexOf(' ');
+String lastWord;
+    if (lastSpaceIndex != -1) {
+      lastWord = t.substring(lastSpaceIndex + 1);
+    }
+duration = lastWord.toInt();
+t.toLowerCase();
+Serial.print(t);
+delay(5000);
+if(t.startsWith("forward")){            //move forward(all motors rotate in forward direction)
+  digitalWrite(9,HIGH);
+  digitalWrite(10,LOW);
+  digitalWrite(11,HIGH);
+  digitalWrite(12,LOW);
+
+  Serial.print("forward chal gaya");
+  delay(duration);
+
+}
+else if(t.startsWith("backward")){      //move reverse (all motors rotate in reverse direction)
+  digitalWrite(9,LOW);
+  digitalWrite(10,HIGH);
+  digitalWrite(11,LOW);
+  digitalWrite(12,HIGH);
+  delay(duration);
+}
+else if(t.startsWith("left")){      //turn right (left side motors rotate in forward direction, right side motors doesn't rotate)
+  digitalWrite(9,LOW);
+  digitalWrite(10,LOW);
+  digitalWrite(11,HIGH);
+  digitalWrite(12,LOW);
+  delay(duration);
+}
+else if(t.startsWith("right")){      //turn left (right side motors rotate in forward direction, left side motors doesn't rotate)
+  digitalWrite(9,HIGH);
+  digitalWrite(10,LOW);
+  digitalWrite(11,LOW);
+  digitalWrite(12,LOW);
+  delay(duration);
+}
+else if(t.startsWith("stop")){      //STOP (all motors stop)
+  digitalWrite(9,LOW);
+  digitalWrite(10,LOW);
+  digitalWrite(11,LOW);
+  digitalWrite(12,LOW);
+  delay(duration);
+}
+digitalWrite(9,LOW);
+  digitalWrite(10,LOW);
+  digitalWrite(11,LOW);
+  digitalWrite(12,LOW);
+  Serial.println(duration);
+  t="";
+}
